@@ -1,0 +1,29 @@
+
+<div class="card container">
+    <div class="dashboard-title">
+        <h4>Dashboard</h4>
+        <button class="connect" mat-button [disabled]="connection === 'Connected'" (click)="connect()">{{connection}}</button>
+        <form action="change address">
+            <mat-form-field class="address-input" appearance="fill">
+                <input (keydown.enter)="changeAddress($event)" matInput placeholder="Enter Address" [value]="changedAddress">
+            </mat-form-field>
+        </form>
+        <button class="reset" mat-button [disabled]="!changedAddress" (click)="resetAddress()">Reset</button>
+    </div>
+    <div>
+        <mat-card class="box">
+            <mat-card-header>
+                <address-title></address-title>
+            </mat-card-header>
+            <balance-title></balance-title>
+        </mat-card>
+        <mat-card class="tokens-container">
+            <mat-card-header>
+                <mat-card-header class="wallet-header">Wallet</mat-card-header>
+            </mat-card-header>
+            <mat-card class="tokens-list">
+                <tokens-holdings></tokens-holdings>
+            </mat-card>
+        </mat-card>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="container">
+    <span class="left">
+        <img class="icon" [src]="token.icon" alt="token-icon">
+        <span class="left-data">
+            <div class="symbol">{{token.symbol}}</div>
+            <div class="price">{{token.priceInDollars || 0}}$</div>
+        </span>
+    </span>
+    <span class="right">
+        <div class="balance-dollar">{{token.totalValueInDollars || 0}}$</div>
+        <div class="balance-eth">{{token.quantity}}</div>
+    </span>
+</div>
