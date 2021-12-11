@@ -1,17 +1,19 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { EtherStateManagerService } from '../services/ether-state-manager.service';
 import { WalletService } from '../services/wallet.service';
 import { create } from 'ethereum-blockies';
-import { skipWhile } from 'rxjs';
+import { skipWhile, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'address-title',
   templateUrl: './address-title.component.html',
   styleUrls: ['./address-title.component.less'],
 })
-export class AddressTitleComponent implements OnInit, AfterViewInit {
-  public address: string;
+export class AddressTitleComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('iconContainer') iconContainer: ElementRef;
+  public address: string;
+  
+  private destroy$: Subject<void> = new Subject()
 
   constructor(
     public readonly etherState: EtherStateManagerService,
@@ -24,6 +26,7 @@ export class AddressTitleComponent implements OnInit, AfterViewInit {
 
   public ngOnInit(): void {
     this.wallet.getAccount()
+    .pipe(takeUntil(this.destroy$))
     .subscribe((address) => {
         this.address = address;
         this.cd.detectChanges();
@@ -32,7 +35,10 @@ export class AddressTitleComponent implements OnInit, AfterViewInit {
     
   public ngAfterViewInit(): void {
       this.wallet.getAccount()
-      .pipe(skipWhile(a => !a))
+      .pipe(
+        skipWhile(a => !a),
+        takeUntil(this.destroy$),
+      )
       .subscribe((address) => {
         const icon = create({
           seed: address,
@@ -50,5 +56,10 @@ export class AddressTitleComponent implements OnInit, AfterViewInit {
         this.renderer.addClass(canvas, 'avatar');
         this.cd.markForCheck();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
