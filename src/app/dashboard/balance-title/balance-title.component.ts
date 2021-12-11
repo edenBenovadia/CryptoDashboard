@@ -1,17 +1,20 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { EtherStateManagerService } from '../services/ether-state-manager.service';
 import { ethers } from 'ethers';
 import { WalletService } from '../services/wallet.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'balance-title',
   templateUrl: './balance-title.component.html',
   styleUrls: ['./balance-title.component.less']
 })
-export class BalanceTitleComponent implements OnInit {
+export class BalanceTitleComponent implements OnInit, OnDestroy {
 
   public balanceInEth: string;
   public readonly currency: string = ' eth';
+
+  private destroy$: Subject<void> = new Subject()
 
   constructor(
     public readonly etherState: EtherStateManagerService,
@@ -21,6 +24,7 @@ export class BalanceTitleComponent implements OnInit {
 
   ngOnInit(): void {
     this.wallet.isConnected()
+    .pipe(takeUntil(this.destroy$))
     .subscribe(async (connected) => {
       if (connected) {
         await this.setBalance();
@@ -33,9 +37,16 @@ export class BalanceTitleComponent implements OnInit {
   }
 
   private async setBalance(): Promise<void> {
-    this.wallet.getBalance().subscribe((balance) =>
+    this.wallet.getBalance()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((balance) =>
       this.balanceInEth = ethers.utils.formatEther(balance) + this.currency
     );
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
       

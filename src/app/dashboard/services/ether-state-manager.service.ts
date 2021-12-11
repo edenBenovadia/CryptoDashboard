@@ -68,6 +68,7 @@ export class EtherStateManagerService extends ComponentStore<TokenState> {
           return combineLatest(networkCalls)
         }),
         tap((tokensWithBalances) => {
+          console.log(tokensWithBalances)
           this.upsertTokens(tokensWithBalances);
         })
       );
@@ -95,8 +96,9 @@ export class EtherStateManagerService extends ComponentStore<TokenState> {
     const { tokensEntities } = state;
     tokens.forEach(token => {
       const key = token.symbol;
-      if (key in tokensEntities) {
-        tokensEntities.set(key, Object.assign(tokensEntities.get(key), token));
+      if (tokensEntities.has(key)) {
+        const updatedToken = Object.assign(tokensEntities.get(key), token);
+        tokensEntities.set(key, updatedToken);
       } else {
         tokensEntities.set(key, token);
       }
@@ -132,19 +134,4 @@ export class EtherStateManagerService extends ComponentStore<TokenState> {
       priceInDollars: value,
     });
   }
-  
-  // private assignPrices(token: Token, priceInDollars: string): Token {
-  //   const value: number = Number.parseFloat(priceInDollars);
-  //   let totalValueInDollars: number = 0;
-
-  //   if(!!token.quantity) {
-  //     totalValueInDollars = Math.round(Number.parseFloat(token.quantity) * value);
-  //   }
-
-  //   return Object.assign(token, { 
-  //     priceInDollars: value,
-  //     ...(!!totalValueInDollars && {totalValueInDollars: totalValueInDollars}),
-  //   });
-  // }
-
 } 
