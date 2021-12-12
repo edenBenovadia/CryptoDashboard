@@ -1,14 +1,14 @@
 
 <div class="card container">
-    <div class="dashboard-title">
-        <h4>Dashboard</h4>
-        <button class="connect" mat-button [disabled]="connection === 'Connected'" (click)="connect()">{{connection}}</button>
-        <form action="change address">
+    <div class="dashboard-title-container">
+        <h4 class="dashboard-title">Dashboard</h4>
+        <form class="address-container" action="change address">
             <mat-form-field class="address-input" appearance="fill">
                 <input (keydown.enter)="changeAddress($event)" matInput placeholder="Enter Address" [value]="changedAddress">
             </mat-form-field>
+            <button class="reset" mat-button [disabled]="!changedAddress" (click)="resetAddress()">Reset</button>
         </form>
-        <button class="reset" mat-button [disabled]="!changedAddress" (click)="resetAddress()">Reset</button>
+        <button class="connect" mat-button [disabled]="connection === 'Connected'" (click)="connect()">{{connection}}</button>
     </div>
     <div>
         <mat-card class="box">
