@@ -1,4 +1,4 @@
-# AssetsDash
+# Crypto dashboard
 
 Hosted website on firebase: https://crypto-manager-3b27e.web.app/assets
 
