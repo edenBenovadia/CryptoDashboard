@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { bufferCount, concatMap, from, map, Observable, of, skip, switchMap, tap } from 'rxjs';
+import { bufferCount, catchError, concatMap, from, map, Observable, of, switchMap, tap } from 'rxjs';
 
 import { EtherScanHttpService } from './ether-scan-http.service';
 import { WalletService } from './wallet.service';
@@ -60,7 +60,12 @@ export class EtherStateManagerService extends ComponentStore<TokenState> {
               this.etherScanHttpService
               .getUserBalanceForToken(token.address, activeAddress)
                 .pipe(
-                  map((balance) => this.assignBalance(token, balance))
+                  map((balance) => this.assignBalance(token, balance)),
+                  tap(v => console.log(v)),
+                  catchError((err) => {
+                    console.log('error in loadHoldings: ' + err);
+                    return of(err)
+                  }),
                 )
             )
           );
@@ -70,7 +75,11 @@ export class EtherStateManagerService extends ComponentStore<TokenState> {
         tap((tokensWithBalances) => {
           console.log(tokensWithBalances)
           this.upsertTokens(tokensWithBalances);
-        })
+        }),
+        catchError((err) => {
+          console.log('error in loadHoldings: ' + err);
+          return of(err)
+        }),
       );
   });
 

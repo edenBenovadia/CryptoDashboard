@@ -53,4 +53,6 @@ baseline.json
 # Husky
 .husky/_
 
+# Chaches
 .angular
+.firebase
