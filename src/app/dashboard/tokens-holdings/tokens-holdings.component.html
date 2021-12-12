@@ -1,4 +1,4 @@
-<mat-list *ngFor="let t of tokens">
+<mat-list *ngFor="let t of (tokens | sort)">
     <mat-list-item>
         <token-row class="token"  [token]="t"></token-row>
     </mat-list-item>
