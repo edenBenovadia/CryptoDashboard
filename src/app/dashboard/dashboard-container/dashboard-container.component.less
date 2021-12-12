@@ -4,12 +4,16 @@
         display: flex;
         flex-direction: column;
 
-        .dashboard-title {
+        .dashboard-title-container {
             display: flex;
             flex-direction: row;
             align-items: center;
             border-bottom: 1px solid #141a1e;
             font-size: 12px;
+            .dashboard-title {
+                margin-right: 20px;
+            }
+
             .connect {
                 width: min-content;
                 color: #7ee787;
@@ -21,11 +25,35 @@
             }
 
             .address-input {
-                width: 300px;
+                flex-direction: 1 1 300px;
                 align-self: right;
                 align-content: right;
                 justify-self: right;
                 justify-content: right;
+            }
+        }
+
+        @media screen and (max-width: 500px) {
+            .dashboard-title-container {
+                display: grid;
+                grid-template-columns: 1fr;
+                .dashboard-title {
+                    display: none;
+                }
+
+                .address-container {
+                    grid-column: 1 / last-line;
+                    display: flex;
+                }
+
+                .connect {
+                    color: #7ee787;
+                    margin-top: 20px;
+                    width: auto;
+                    grid-column: 1 / last-line;
+                    margin-left: 0;
+                }
+
             }
         }
 
