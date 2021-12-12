@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { EtherStateManagerService } from '../services/ether-state-manager.service';
-import { ethers } from 'ethers';
 import { WalletService } from '../services/wallet.service';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
+import { Token } from '..';
+import { roundNumber } from '../utils';
 
 @Component({
   selector: 'balance-title',
@@ -11,8 +12,8 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class BalanceTitleComponent implements OnInit, OnDestroy {
 
-  public balanceInEth: string;
-  public readonly currency: string = ' eth';
+  public netWorth: string;
+  public readonly currency: string = '$';
 
   private destroy$: Subject<void> = new Subject()
 
@@ -29,7 +30,7 @@ export class BalanceTitleComponent implements OnInit, OnDestroy {
       if (connected) {
         await this.setBalance();
       } else {
-        this.balanceInEth = '0' + this.currency;
+        this.netWorth = '0' + this.currency;
       } 
 
       this.cd.detectChanges();
@@ -37,16 +38,27 @@ export class BalanceTitleComponent implements OnInit, OnDestroy {
   }
 
   private async setBalance(): Promise<void> {
-    this.wallet.getBalance()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((balance) =>
-      this.balanceInEth = ethers.utils.formatEther(balance) + this.currency
+    this.etherState.tokens$
+    .pipe(
+      map((tokens: Token[]) => tokens.reduce(this.add, 0)),
+      takeUntil(this.destroy$)
+    )
+    .subscribe((netWorth) =>
+      this.netWorth = roundNumber(netWorth).toString() + this.currency
     );
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  private add(accumulator: number, token: Token) {
+    if (!!token.totalValueInDollars) {
+      return accumulator + token.totalValueInDollars;
+    }
+
+    return accumulator;
   }
 }
       

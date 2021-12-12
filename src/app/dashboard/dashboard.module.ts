@@ -11,6 +11,7 @@ import { BalanceTitleComponent } from './balance-title/balance-title.component';
 import { FormsModule } from '@angular/forms';
 import { TokensHoldingsComponent } from './tokens-holdings/tokens-holdings.component';
 import { TokenRowComponent } from './token-row/token-row.component';
+import { SortPipe } from './pipes/sort.pipe';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { TokenRowComponent } from './token-row/token-row.component';
     BalanceTitleComponent,
     TokensHoldingsComponent,
     TokenRowComponent,
+    SortPipe,
   ],
   imports: [
     FormsModule,

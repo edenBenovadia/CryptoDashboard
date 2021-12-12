@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
-import { tokenAddresses } from '..';
 import { EtherStateManagerService } from '../services/ether-state-manager.service';
 import { WalletService } from '../services/wallet.service';
 
@@ -23,7 +22,7 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.tokensStore.loadTokens(tokenAddresses);
+    this.tokensStore.loadTokens();
     this.wallet.isConnected()
     .pipe(takeUntil(this.destroy$))
     .subscribe(connected => {
@@ -41,7 +40,7 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       takeUntil(this.destroy$),
     ).subscribe(() => 
-      this.tokensStore.loadTokens(tokenAddresses)
+      this.tokensStore.loadTokens()
     );
   }
   
