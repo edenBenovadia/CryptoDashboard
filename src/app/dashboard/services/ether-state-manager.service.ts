@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { concatMap, filter, Observable, tap } from 'rxjs';
+import { concatMap, filter, Observable, switchMap, tap } from 'rxjs';
 
 import { EtherScanHttpService } from './ether-scan-http.service';
 import { WalletService } from './wallet.service';
@@ -26,7 +26,7 @@ export class EtherStateManagerService extends ComponentStore<TokenState> {
     return this.wallet.getAccount()
     .pipe(
       filter(address => !!address),
-      concatMap((address) => {
+      switchMap((address) => {
         return this.etherScanHttpService.getBalanceForAddress(address);
       }),
       tap((tokens) => {

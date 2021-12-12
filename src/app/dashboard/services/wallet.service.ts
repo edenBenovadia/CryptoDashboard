@@ -42,6 +42,8 @@ export class WalletService {
     const { ethereum } = (window as any);
     if (!!ethereum.selectedAddress) {
       this.activeAdress.next(ethereum.selectedAddress);
+    } else {
+      this.activeAdress.next('');
     }
   }
   
