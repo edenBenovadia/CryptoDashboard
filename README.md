@@ -16,3 +16,6 @@ This project written in Angular and uses ngrx component-store for state managmen
 The BE APIs are provided by covalenthq apis and ethers library.
 Deployed on firebase.
 Has responsive UI.
+
+![image](https://user-images.githubusercontent.com/44608148/145722122-991a6d7b-f249-4797-a55b-b05514ccfbe0.png)
+
