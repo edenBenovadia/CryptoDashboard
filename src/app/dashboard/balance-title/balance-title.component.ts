@@ -43,9 +43,10 @@ export class BalanceTitleComponent implements OnInit, OnDestroy {
       map((tokens: Token[]) => tokens.reduce(this.add, 0)),
       takeUntil(this.destroy$)
     )
-    .subscribe((netWorth) =>
-      this.netWorth = roundNumber(netWorth).toString() + this.currency
-    );
+    .subscribe((netWorth) => {
+      this.netWorth = roundNumber(netWorth).toString() + this.currency;
+      this.cd.detectChanges();
+    });
   }
 
   ngOnDestroy(): void {
