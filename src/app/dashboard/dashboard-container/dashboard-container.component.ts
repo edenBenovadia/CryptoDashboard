@@ -12,7 +12,6 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
 
   public connection: string;
   public changedAddress: string = '';
-
   private destroy$: Subject<void> = new Subject()
 
   constructor(
