@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { filter, Observable, switchMap, tap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 
 import { EtherScanHttpService } from './ether-scan-http.service';
-import { WalletService } from './wallet.service';
 import { ComponentStore } from '@ngrx/component-store';
 import { Token, TokenState } from '../';
 
@@ -17,15 +16,13 @@ const EmptyState: TokenState = {
 export class EtherStateManagerService extends ComponentStore<TokenState> {
   constructor(
     private etherScanHttpService: EtherScanHttpService,
-    private wallet: WalletService,
   ) {
     super(EmptyState);
   }
 
-  readonly loadTokens = this.effect(() => {
-    return this.wallet.getAccount()
+  readonly loadTokens = this.effect((address$: Observable<string>) => {
+    return address$
     .pipe(
-      filter(address => !!address),
       switchMap((address) => {
         return this.etherScanHttpService.getBalanceForAddress(address);
       }),
