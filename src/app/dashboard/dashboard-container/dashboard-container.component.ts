@@ -21,7 +21,6 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.tokensStore.loadTokens();
     this.wallet.isConnected()
     .pipe(takeUntil(this.destroy$))
     .subscribe(connected => {
@@ -40,7 +39,7 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
     ).subscribe((address) => {
       if (!!address) {
-        this.tokensStore.loadTokens();
+        this.tokensStore.loadTokens(address);
       } else {
         this.tokensStore.resetTokens();
       }
