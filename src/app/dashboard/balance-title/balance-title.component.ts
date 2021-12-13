@@ -18,26 +18,15 @@ export class BalanceTitleComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject()
 
   constructor(
-    public readonly etherState: EtherStateManagerService,
-    public readonly wallet: WalletService,
-    public readonly cd: ChangeDetectorRef,
+    private readonly etherState: EtherStateManagerService,
+    private readonly cd: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
-    this.wallet.isConnected()
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(async (connected) => {
-      if (connected) {
-        await this.setBalance();
-      } else {
-        this.netWorth = '0' + this.currency;
-      } 
-
-      this.cd.detectChanges();
-    });
+    this.setBalance();
   }
 
-  private async setBalance(): Promise<void> {
+  private setBalance(): void {
     this.etherState.tokens$
     .pipe(
       map((tokens: Token[]) => tokens.reduce(this.add, 0)),

@@ -38,9 +38,13 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
     .pipe(
       distinctUntilChanged(),
       takeUntil(this.destroy$),
-    ).subscribe(() => 
-      this.tokensStore.loadTokens()
-    );
+    ).subscribe((address) => {
+      if (!!address) {
+        this.tokensStore.loadTokens();
+      } else {
+        this.tokensStore.resetTokens();
+      }
+    });
   }
   
   public changeAddress(event: any) {
