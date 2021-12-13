@@ -1,6 +1,6 @@
 # Crypto dashboard
 
-Hosted website on firebase: https://crypto-manager-3b27e.web.app/assets
+Hosted website on firebase: https://crypto-manager-3b27e--pr11-dev-edbenova-fixed-s-f3evy57l.web.app/assets
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.4.
 
