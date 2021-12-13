@@ -14,7 +14,7 @@ export class WalletService {
   private activeAdress: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor() {
-    setTimeout(() => this.accountListener(), 1);
+    this.accountListener();
   }
 
   public async connect() {
@@ -59,10 +59,14 @@ export class WalletService {
     );
   }
 
-  private accountListener(): void {    
+  private async accountListener(): Promise<void> {    
     const { ethereum } = (window as any);
-
+    
     if (!!ethereum.selectedAddress) {
+      this.activeAdress.next(ethereum.selectedAddress);
+      this.connected();
+    } else {
+      await ethereum.enable();
       this.activeAdress.next(ethereum.selectedAddress);
       this.connected();
     }
