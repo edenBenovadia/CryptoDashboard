@@ -1,6 +1,6 @@
 import { Token } from '../';
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { EtherStateManagerService } from '../services/ether-state-manager.service';
+import { TokensStore } from '../services/tokens.store';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -14,7 +14,7 @@ export class TokensHoldingsComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject()
 
   constructor(
-    private readonly tokensStore: EtherStateManagerService,
+    private readonly tokensStore: TokensStore,
     private readonly cd: ChangeDetectorRef
   ) { }
 

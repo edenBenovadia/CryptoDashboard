@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { EtherStateManagerService } from '../services/ether-state-manager.service';
+import { TokensStore } from '../services/tokens.store';
 import { WalletService } from '../services/wallet.service';
 import { create } from 'ethereum-blockies';
 import { skipWhile, Subject, takeUntil } from 'rxjs';
@@ -17,7 +17,7 @@ export class AddressTitleComponent implements OnInit, AfterViewInit, OnDestroy {
   private destroy$: Subject<void> = new Subject()
 
   constructor(
-    private readonly tokensStore: EtherStateManagerService,
+    private readonly tokensStore: TokensStore,
     private readonly wallet: WalletService,
     private readonly cd: ChangeDetectorRef,
     private renderer: Renderer2,

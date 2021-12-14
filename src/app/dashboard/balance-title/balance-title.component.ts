@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { EtherStateManagerService } from '../services/ether-state-manager.service';
+import { TokensStore } from '../services/tokens.store';
 import { WalletService } from '../services/wallet.service';
 import { map, Subject, takeUntil } from 'rxjs';
 import { Token } from '..';
@@ -18,7 +18,7 @@ export class BalanceTitleComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject()
 
   constructor(
-    private readonly etherState: EtherStateManagerService,
+    private readonly etherState: TokensStore,
     private readonly cd: ChangeDetectorRef,
   ) { }
 
