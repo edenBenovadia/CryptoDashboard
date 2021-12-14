@@ -3,7 +3,7 @@ import { catchError, concatMap, Observable, of, tap } from 'rxjs';
 
 import { EtherScanHttpService } from './ether-scan-http.service';
 import { ComponentStore } from '@ngrx/component-store';
-import { Token, TokenState } from '../';
+import { Token, TokenState } from '..';
 
 const EmptyState: TokenState = {
   tokensEntities: new Map<string, Token>(),
@@ -14,13 +14,14 @@ const EmptyState: TokenState = {
 @Injectable({
   providedIn: 'root'
 })
-export class EtherStateManagerService extends ComponentStore<TokenState> {
+export class TokensStore extends ComponentStore<TokenState> {
   constructor(
     private etherScanHttpService: EtherScanHttpService,
   ) {
     super(EmptyState);
   }
 
+  /*************************effects**************************************/
   readonly loadTokens = this.effect((address$: Observable<string>) => {
     return address$
     .pipe(
@@ -71,6 +72,7 @@ export class EtherStateManagerService extends ComponentStore<TokenState> {
     }
   });
 
+  /*************************reducers**************************************/
   readonly clearTokens = this.updater((state) => {
     return <TokenState> {
       ...state,
@@ -101,6 +103,7 @@ export class EtherStateManagerService extends ComponentStore<TokenState> {
     }
   });
 
+  /*************************selectors**************************************/
   readonly tokens$: Observable<Token[]> = this.select(state => {
     const tokensList: Token[] = [];
     state.tokensEntities.forEach(token => {

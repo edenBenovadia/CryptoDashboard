@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { EtherStateManagerService } from '../services/ether-state-manager.service';
+import { TokensStore } from '../services/tokens.store';
 import { WalletService } from '../services/wallet.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
   constructor(
     private wallet: WalletService,
     private readonly cd: ChangeDetectorRef,
-    private readonly tokensStore: EtherStateManagerService,
+    private readonly tokensStore: TokensStore,
   ) { }
 
   ngOnInit(): void {
