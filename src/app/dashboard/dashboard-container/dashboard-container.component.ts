@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { EtherStateManagerService } from '../services/ether-state-manager.service';
 import { WalletService } from '../services/wallet.service';
 
@@ -35,7 +35,6 @@ export class DashboardContainerComponent implements OnInit, OnDestroy {
 
     this.wallet.getAccount()
     .pipe(
-      distinctUntilChanged(),
       takeUntil(this.destroy$),
     ).subscribe((address) => {
       if (!!address) {
