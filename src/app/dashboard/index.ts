@@ -15,6 +15,7 @@ export interface Token {
 export interface TokenState {
     tokensList: Token[];
     tokensEntities: Map<string, Token>;
+    hasError: boolean;
 }
 
 export const eth: Token = {

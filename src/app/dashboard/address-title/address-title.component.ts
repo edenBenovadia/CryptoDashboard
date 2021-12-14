@@ -12,13 +12,14 @@ import { skipWhile, Subject, takeUntil } from 'rxjs';
 export class AddressTitleComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('iconContainer') iconContainer: ElementRef;
   public address: string;
+  public hasError: boolean;
   
   private destroy$: Subject<void> = new Subject()
 
   constructor(
-    public readonly etherState: EtherStateManagerService,
-    public readonly wallet: WalletService,
-    public readonly cd: ChangeDetectorRef,
+    private readonly tokensStore: EtherStateManagerService,
+    private readonly wallet: WalletService,
+    private readonly cd: ChangeDetectorRef,
     private renderer: Renderer2,
     ) {
       create();
@@ -30,8 +31,15 @@ export class AddressTitleComponent implements OnInit, AfterViewInit, OnDestroy {
     .subscribe((address) => {
         this.address = address;
         this.cd.detectChanges();
-      })
-    }
+    });
+
+    this.tokensStore.hasError$
+    .pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((hasError) => {
+      this.hasError = hasError;
+    });
+  }
     
   public ngAfterViewInit(): void {
       this.wallet.getAccount()

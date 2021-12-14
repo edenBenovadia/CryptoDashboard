@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, switchMap, tap } from 'rxjs';
+import { catchError, concatMap, Observable, of, tap } from 'rxjs';
 
 import { EtherScanHttpService } from './ether-scan-http.service';
 import { ComponentStore } from '@ngrx/component-store';
@@ -8,6 +8,7 @@ import { Token, TokenState } from '../';
 const EmptyState: TokenState = {
   tokensEntities: new Map<string, Token>(),
   tokensList: [],
+  hasError: false,
 }
 
 @Injectable({
@@ -23,11 +24,21 @@ export class EtherStateManagerService extends ComponentStore<TokenState> {
   readonly loadTokens = this.effect((address$: Observable<string>) => {
     return address$
     .pipe(
-      switchMap((address) => {
-        return this.etherScanHttpService.getBalanceForAddress(address);
+      concatMap((address) => {
+        return this.etherScanHttpService.getBalanceForAddress(address)
+        .pipe(
+          catchError((err) =>  {
+            console.log(err);
+            this.errorLoading();
+  
+            return of([]);
+          }),
+        )
       }),
       tap((tokens) => {
-        this.addTokens(tokens)
+        if (tokens.length > 0) {
+          this.addTokens(tokens);
+        }
       }),
     );
   });
@@ -35,7 +46,6 @@ export class EtherStateManagerService extends ComponentStore<TokenState> {
   readonly resetTokens = this.effect((reset$) => {
     return reset$
     .pipe(
-      //only if address if empty
       tap(() => {
         this.clearTokens();
       }),
@@ -57,6 +67,7 @@ export class EtherStateManagerService extends ComponentStore<TokenState> {
     return <TokenState> {
       ...state,
       tokensEntities: tokensEntities,
+      hasError: false,
     }
   });
 
@@ -64,6 +75,7 @@ export class EtherStateManagerService extends ComponentStore<TokenState> {
     return <TokenState> {
       ...state,
       tokensEntities: new Map<string, Token>(),
+      hasError: false,
     }
   });
 
@@ -77,6 +89,15 @@ export class EtherStateManagerService extends ComponentStore<TokenState> {
     return <TokenState> {
       ...state,
       tokensEntities: tokensMap,
+      hasError: false,
+    }
+  });
+
+  readonly errorLoading = this.updater((state) => {
+    return <TokenState> {
+      ...state,
+      tokensEntities: new Map<string, Token>(),
+      hasError: true,
     }
   });
 
@@ -85,5 +106,9 @@ export class EtherStateManagerService extends ComponentStore<TokenState> {
     state.tokensEntities.forEach(token => tokensList.push(token));
 
     return tokensList;
+  });
+
+  readonly hasError$: Observable<boolean> = this.select(state => {
+    return state.hasError;
   });
 } 
