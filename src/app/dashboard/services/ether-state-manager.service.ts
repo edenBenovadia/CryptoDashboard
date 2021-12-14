@@ -103,7 +103,11 @@ export class EtherStateManagerService extends ComponentStore<TokenState> {
 
   readonly tokens$: Observable<Token[]> = this.select(state => {
     const tokensList: Token[] = [];
-    state.tokensEntities.forEach(token => tokensList.push(token));
+    state.tokensEntities.forEach(token => {
+      if (!!token.totalValueInDollars) {
+        tokensList.push(token)
+      }
+    });
 
     return tokensList;
   });
